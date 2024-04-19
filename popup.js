@@ -31,6 +31,11 @@ function removeTagsAndScriptStyleContent(content) {
   return cleanedContent;
 }
 
+const prePrompt = `You're an experienced resume writer who has been writing cover letters for almost all job profiles for over 20 years now. However, your speciality is writing personalised cover letters where you portray the best of the candidate on how well they write, their experience, skills, etc. Your task is to write a cover letter for applying to software engineer jobs. Here are the details -`;
+const afterPrompt = `Ensure the cover letter highlights the candidate's technical skills, experience in software development, ability to work in a team, problem-solving skills, and enthusiasm for the specific job and company they are applying to. Make the cover letter candidate-centered, showcasing their achievements and how they can bring value to the potential employer.
+Remember to tailor the cover letter for each job application, highlighting the most relevant skills and experiences based on the job description provided by the company.
+For example, when writing a cover letter for a software engineer position, you can start by addressing the hiring manager directly, mentioning your passion for coding and solving complex problems. Emphasize your experience with different programming languages, frameworks, and tools, and how you have successfully delivered projects in the past. Conclude by expressing your excitement to contribute to the company's growth and success with your technical expertise and teamwork skills.`;
+
 document.addEventListener("DOMContentLoaded", () => {
   const submitButton = document.getElementById("submit");
 
@@ -89,12 +94,14 @@ document.addEventListener("DOMContentLoaded", () => {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        prompt: `${prompt}
+        prompt: `
+          ${prePrompt}
           ${settingsText}
           ${promptSettingsText}
            Here's the dom content of the job description page. ${urlStatic}
            ${parsedContent}
            Please analyse the content of the job description and generate a professional coverletter from it.
+           ${afterPrompt}
            `,
         model,
       }),
