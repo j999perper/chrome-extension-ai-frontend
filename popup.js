@@ -104,7 +104,9 @@ document.addEventListener("DOMContentLoaded", () => {
         document.getElementById("coverLetter").value = data.coverletter;
         document.getElementById("status").innerHTML = "";
         document.getElementsByClassName("loader")[0].style.display = "none";
-        navigator.clipboard.writeText(data.coverletter);
+        if (copyToClipboardChecked) {
+          navigator.clipboard.writeText(data.coverletter);
+        }
       })
       .catch((error) => {
         console.error("Error submitting form:", error);
