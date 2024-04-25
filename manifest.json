@@ -1,41 +1,46 @@
 {
-    "name": "Auto Coverletter Generator",
-    "description": "This extension will generate a cover letter for you based on the job description.",
-    "version": "0.1.0",
-    "manifest_version": 3,
-    "background": {
-        "service_worker": "background.js",
-        "type": "module"
-    },
-    "permissions": [
-        "activeTab",
-        "alarms",
-        "background",        
-        "contentSettings",
-        "contextMenus",
-        "debugger",
-        "declarativeContent",
-        "downloads",
-        "gcm",
-        "idle",
-        "management",
-        "nativeMessaging",
-        "notifications",
-        "pageCapture",
-        "printerProvider",
-        "privacy",
-        "processes",
-        "scripting",
-        "search",
-        "storage",
-        "tabGroups",
-        "tabs",
-        "webNavigation"
-    ],
-    "host_permissions": [
-        "*://*/*"
-    ],
-    "action": {
-        "default_popup": "popup.html"
+  "name": "Auto Coverletter Generator",
+  "description": "This extension will generate a cover letter for you based on the job description.",
+  "version": "0.1.0",
+  "manifest_version": 3,
+  "background": {
+    "service_worker": "background.js",
+    "type": "module"
+  },
+  "permissions": [
+    "activeTab",
+    "alarms",
+    "background",
+    "contentSettings",
+    "contextMenus",
+    "debugger",
+    "declarativeContent",
+    "downloads",
+    "gcm",
+    "idle",
+    "management",
+    "nativeMessaging",
+    "notifications",
+    "pageCapture",
+    "printerProvider",
+    "privacy",
+    "processes",
+    "scripting",
+    "search",
+    "storage",
+    "tabGroups",
+    "tabs",
+    "webNavigation"
+  ],
+  "host_permissions": ["*://*/*"],
+  "action": {
+    "default_popup": "popup.html"
+  },
+  "content_scripts": [
+    {
+      "matches": ["*://*/*"],
+      "js": ["test.js"],
+      "css": ["test.css"]
     }
+  ]
 }
