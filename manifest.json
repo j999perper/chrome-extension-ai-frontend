@@ -33,14 +33,11 @@
     "webNavigation"
   ],
   "host_permissions": ["*://*/*"],
-  "action": {
-    "default_popup": "popup.html"
-  },
   "content_scripts": [
     {
       "matches": ["*://*/*"],
-      "js": ["test.js"],
-      "css": ["test.css"]
+      "js": ["coverletter.js"],
+      "css": ["coverletter.css"]
     }
   ]
 }
