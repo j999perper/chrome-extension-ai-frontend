@@ -1,8 +1,6 @@
 // Todo: replace the logo url with the actual logo url
-const logoUrl =
-  "https://github-production-user-asset-6210df.s3.amazonaws.com/101011021/325848629-16f1c6ae-505f-4311-bae0-d84a0cd57fa2.svg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAVCODYLSA53PQK4ZA%2F20240426%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20240426T042948Z&X-Amz-Expires=300&X-Amz-Signature=c65634415ecd6d4abfe37552f1c1c0facd27b459d77e5c8464be3288ec041854&X-Amz-SignedHeaders=host&actor_id=0&key_id=0&repo_id=788747670";
-const expandIconUrl =
-  "https://github.com/superdev0421/chrome-extension-ai-frontend/assets/101011021/06d0fbdc-2298-412c-9d19-94ed4cf33c93";
+const logoUrl = "https://ibb.co/Sd7K4HH";
+const expandIconUrl = "https://ibb.co/LQ3KHP5";
 
 // Create a new <div> element
 const html = document.createElement("div");
@@ -574,7 +572,7 @@ function submitHandle(e) {
     }`;
 
   // Submit to backend
-  fetch("http://localhost:5000/gpt/coverletter", {
+  fetch("https://coverletter-backend.vercel.app/gpt/coverletter", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
