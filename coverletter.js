@@ -1,6 +1,6 @@
 // Todo: replace the logo url with the actual logo url
-const logoUrl = "https://ibb.co/Sd7K4HH";
-const expandIconUrl = "https://ibb.co/LQ3KHP5";
+const logoUrl = "https://i.ibb.co/jVSts5R/main.png";
+const expandIconUrl = "https://i.ibb.co/1dJ9tBB/expand.png";
 
 // Create a new <div> element
 const html = document.createElement("div");
@@ -534,7 +534,7 @@ function submitHandle(e) {
   const domContent = document.body.outerHTML;
   const content = removeTagsAndScriptStyleContent(domContent);
 
-  coverLetterArea.textContent = "";
+  coverLetterArea.value = "";
 
   const urlStatic = urlSpan.textContent;
 
@@ -592,7 +592,7 @@ function submitHandle(e) {
   })
     .then((response) => response.json())
     .then((data) => {
-      document.getElementById("coverLetter").value = data.coverletter;
+      coverLetterArea.value = data.coverletter;
       loadingLabel.textContent = "";
       loadingSpan.style.display = "none";
       if (copyToClipboardChecked) {
