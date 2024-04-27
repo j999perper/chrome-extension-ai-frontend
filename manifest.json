@@ -29,6 +29,9 @@
     "webNavigation"
   ],
   "host_permissions": ["*://*/*"],
+  "action": {
+    "default_title": "Generate Cover Letter"
+  },
   "content_scripts": [
     {
       "matches": ["*://*/*"],
