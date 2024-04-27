@@ -36,7 +36,8 @@
     {
       "matches": ["*://*/*"],
       "js": ["coverletter.js"],
-      "css": ["coverletter.css"]
+      "css": ["coverletter.css"],
+      "run_at": "document_end"
     }
   ]
 }
