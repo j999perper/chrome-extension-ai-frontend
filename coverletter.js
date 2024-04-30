@@ -259,10 +259,17 @@ buttonsContainer.className = "buttons-container";
 const generateButton = document.createElement("button");
 generateButton.id = "submit";
 generateButton.textContent = "Generate";
+
+const generatePDFButton = document.createElement("button");
+generatePDFButton.id = "generate-pdf";
+generatePDFButton.textContent = "Download PDF";
+
 const settingsButton = document.createElement("button");
 settingsButton.id = "setting";
 settingsButton.textContent = "Settings";
+
 buttonsContainer.appendChild(generateButton);
+buttonsContainer.appendChild(generatePDFButton);
 buttonsContainer.appendChild(settingsButton);
 body.appendChild(buttonsContainer);
 
@@ -349,6 +356,10 @@ toggleButton.addEventListener("click", () => {
 
 expandIcon.addEventListener("click", () => {
   html.style.display = "none";
+});
+
+generatePDFButton.addEventListener("click", () => {
+  getGeneratePdf();
 });
 
 settingsButton.addEventListener("click", () => {
@@ -457,6 +468,33 @@ function getSettings() {
   const github = localStorage.getItem("github");
 
   return { firstName, lastName, portfolio, github };
+}
+
+function getGeneratePdf() {
+  const content = document.getElementById("coverLetter").value;
+
+  fetch("https://ruling-similarly-dove.ngrok-free.app/gpt/download", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      content,
+    }),
+  })
+    .then((response) => response.blob())
+    .then((blob) => {
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.style.display = "none";
+      a.href = url;
+
+      a.download = "coverletter.pdf";
+
+      document.body.appendChild(a);
+      a.click();
+      window.URL.revokeObjectURL(url);
+    });
 }
 
 function getPromptSettings() {
@@ -572,7 +610,7 @@ function submitHandle(e) {
     }`;
 
   // Submit to backend
-  fetch("https://coverletter-backend.vercel.app/gpt/coverletter", {
+  fetch("https://ruling-similarly-dove.ngrok-free.app/gpt/coverletter", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
