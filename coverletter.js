@@ -648,3 +648,27 @@ function submitHandle(e) {
 }
 
 autoPopulate();
+
+document.body.addEventListener("click", (e) => {
+  let target = e.target;
+
+  // This flag will determine if the click was inside a 'cover-letter-container'
+  let isClickInsideCoverLetterContainer = false;
+
+  // Traverse up the DOM until you find an element with the 'cover-letter-container' or 'toggle-button'  class or until you reach the body element
+  while (target !== document.body) {
+    if (
+      target.classList.contains("cover-letter-container") ||
+      target.classList.contains("toggle-button")
+    ) {
+      isClickInsideCoverLetterContainer = true;
+      break; // If the class is found, set the flag to true and break the loop
+    }
+    target = target.parentElement; // Move up in the DOM tree
+  }
+
+  // If the click was not inside any 'cover-letter-container' or 'toggle-button', handle the outside click
+  if (!isClickInsideCoverLetterContainer && html.style.display === "block") {
+    html.style.display = "none"; // Hide the 'cover-letter-container'
+  }
+});
