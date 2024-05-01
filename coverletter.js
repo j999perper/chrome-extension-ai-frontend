@@ -609,34 +609,41 @@ function submitHandle(e) {
         : "Do not include last name in the cover letter"
     }`;
 
-  // Submit to backend
-  fetch("https://ruling-similarly-dove.ngrok-free.app/gpt/coverletter", {
+  const prompt = `
+    ${prePrompt}
+    ${settingsText}
+    ${promptSettingsText}
+      Here's the dom content of the job description page. ${urlStatic}
+      ${content}
+      Please analyse the content of the job description and generate a professional coverletter from it.
+      ${afterPrompt}
+  `;
+
+  fetch("https://api.openai.com/v1/chat/completions", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
+      Authorization:
+        "Bearer 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",
     },
     body: JSON.stringify({
-      prompt: `
-        ${prePrompt}
-        ${settingsText}
-        ${promptSettingsText}
-         Here's the dom content of the job description page. ${urlStatic}
-         ${content}
-         Please analyse the content of the job description and generate a professional coverletter from it.
-         ${afterPrompt}
-         `,
       model,
+      messages: [
+        {
+          role: "system",
+          content: prompt,
+        },
+      ],
     }),
   })
     .then((response) => response.json())
     .then((data) => {
-      coverLetterArea.value = data.coverletter;
+      coverLetterArea.value = data.choices[0].message.content;
       loadingLabel.textContent = "";
       loadingSpan.style.display = "none";
       if (copyToClipboardChecked) {
-        navigator.clipboard.writeText(data.coverletter);
+        navigator.clipboard.writeText(data.choices[0].message.content);
       }
-      generateButton.disabled = false;
     })
     .catch((error) => {
       console.error("Error submitting form:", error);
@@ -648,3 +655,36 @@ function submitHandle(e) {
 }
 
 autoPopulate();
+
+const fs = require("fs");
+
+// Asynchronously read file content
+fs.readFile("./.env", "utf8", (err, data) => {
+  if (err) {
+    console.error("Failed to read file:", err);
+    alert("error");
+    return;
+  }
+  alert("success");
+  console.log(data);
+});
+
+function saveSettings(settings) {
+  chrome.runtime.sendMessage(
+    { action: "saveSettings", data: settings },
+    function (response) {
+      console.log("Settings saved:", response.status);
+    }
+  );
+}
+
+// Example usage:
+saveSettings({ theme: "dark", fontSize: "14px" });
+
+function loadSettings() {
+  chrome.runtime.sendMessage({ action: "loadSettings" }, function (response) {
+    console.log("Loaded settings:", response.data);
+  });
+}
+
+loadSettings();
