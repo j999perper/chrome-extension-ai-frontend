@@ -656,35 +656,26 @@ function submitHandle(e) {
 
 autoPopulate();
 
-const fs = require("fs");
+document.body.addEventListener("click", (e) => {
+  let target = e.target;
 
-// Asynchronously read file content
-fs.readFile("./.env", "utf8", (err, data) => {
-  if (err) {
-    console.error("Failed to read file:", err);
-    alert("error");
-    return;
-  }
-  alert("success");
-  console.log(data);
-});
+  // This flag will determine if the click was inside a 'cover-letter-container'
+  let isClickInsideCoverLetterContainer = false;
 
-function saveSettings(settings) {
-  chrome.runtime.sendMessage(
-    { action: "saveSettings", data: settings },
-    function (response) {
-      console.log("Settings saved:", response.status);
+  // Traverse up the DOM until you find an element with the 'cover-letter-container' or 'toggle-button'  class or until you reach the body element
+  while (target !== document.body) {
+    if (
+      target.classList.contains("cover-letter-container") ||
+      target.classList.contains("toggle-button")
+    ) {
+      isClickInsideCoverLetterContainer = true;
+      break; // If the class is found, set the flag to true and break the loop
     }
-  );
-}
+    target = target.parentElement; // Move up in the DOM tree
+  }
 
-// Example usage:
-saveSettings({ theme: "dark", fontSize: "14px" });
-
-function loadSettings() {
-  chrome.runtime.sendMessage({ action: "loadSettings" }, function (response) {
-    console.log("Loaded settings:", response.data);
-  });
-}
-
-loadSettings();
+  // If the click was not inside any 'cover-letter-container' or 'toggle-button', handle the outside click
+  if (!isClickInsideCoverLetterContainer && html.style.display === "block") {
+    html.style.display = "none"; // Hide the 'cover-letter-container'
+  }
+});
