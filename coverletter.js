@@ -679,3 +679,17 @@ document.body.addEventListener("click", (e) => {
     html.style.display = "none"; // Hide the 'cover-letter-container'
   }
 });
+
+document.addEventListener("keydown", function (event) {
+  event.preventDefault();
+  if (event.ctrlKey && event.shiftKey && event.code === "KeyZ") {
+    if (html.style.display === "block") {
+      html.style.display = "none";
+    } else {
+      html.style.display = "block";
+    }
+  }
+  if (event.code === "Escape") {
+    html.style.display = "none";
+  }
+});
