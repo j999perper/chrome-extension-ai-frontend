@@ -62,8 +62,16 @@ shortInfoContainer.appendChild(shortInfoTextArea);
 
 body.appendChild(shortInfoContainer);
 
-// const div1 = document.createElement("div");
-// div1.className = "prompt-setting-wrapper";
+const selectToggleContainer = document.createElement("div");
+selectToggleContainer.className = "select-toggle-container";
+const selectToggleButton = document.createElement("img");
+selectToggleButton.className = "select-toggle";
+selectToggleButton.src = expandIconUrl;
+selectToggleContainer.appendChild(selectToggleButton);
+body.appendChild(selectToggleContainer);
+
+const selectsWrapper = document.createElement("div");
+selectsWrapper.className = "selects-wrapper";
 
 const modelSelectContainer = document.createElement("div");
 modelSelectContainer.className = "row-container";
@@ -92,7 +100,7 @@ models.forEach((model) => {
 modelSelectContainer.appendChild(modelSelectLabel);
 modelSelectContainer.appendChild(modelSelect);
 
-body.appendChild(modelSelectContainer);
+selectsWrapper.appendChild(modelSelectContainer);
 
 const toneSelectContainer = document.createElement("div");
 toneSelectContainer.className = "row-container";
@@ -119,7 +127,7 @@ tones.forEach((tone) => {
 toneSelectContainer.appendChild(toneSelectLabel);
 toneSelectContainer.appendChild(toneSelect);
 
-body.appendChild(toneSelectContainer);
+selectsWrapper.appendChild(toneSelectContainer);
 
 const languageStyleSelectContainer = document.createElement("div");
 languageStyleSelectContainer.className = "row-container";
@@ -144,7 +152,7 @@ languageStyles.forEach((languageStyle) => {
 languageStyleSelectContainer.appendChild(languageStyleSelectLabel);
 languageStyleSelectContainer.appendChild(languageStyleSelect);
 
-body.appendChild(languageStyleSelectContainer);
+selectsWrapper.appendChild(languageStyleSelectContainer);
 
 const formattingSelectContainer = document.createElement("div");
 formattingSelectContainer.className = "row-container";
@@ -170,7 +178,9 @@ formattingOptions.forEach((formattingOption) => {
 formattingSelectContainer.appendChild(formattingSelectLabel);
 formattingSelectContainer.appendChild(formattingSelect);
 
-body.appendChild(formattingSelectContainer);
+selectsWrapper.appendChild(formattingSelectContainer);
+
+body.appendChild(selectsWrapper);
 
 const checkBoxGroup = document.createElement("div");
 checkBoxGroup.className = "checkbox-group";
@@ -352,6 +362,14 @@ document.body.appendChild(html);
 
 toggleButton.addEventListener("click", () => {
   html.style.display = "block";
+});
+
+selectToggleButton.addEventListener("click", () => {
+  if (selectsWrapper.style.display === "flex") {
+    selectsWrapper.style.display = "none";
+  } else {
+    selectsWrapper.style.display = "flex";
+  }
 });
 
 expandIcon.addEventListener("click", () => {

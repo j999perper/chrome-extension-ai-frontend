@@ -54,6 +54,25 @@
   padding: 1rem;
 }
 
+.selects-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.select-toggle-container {
+  display: flex;
+  justify-content: right;
+  align-items: center;
+}
+
+.select-toggle {
+  width: 1.5rem;
+  height: 1.5rem;
+  float: right;
+  cursor: pointer;
+}
+
 .row-container {
   display: flex;
   flex-direction: column;
