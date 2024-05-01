@@ -681,7 +681,6 @@ document.body.addEventListener("click", (e) => {
 });
 
 document.addEventListener("keydown", function (event) {
-  event.preventDefault();
   if (event.ctrlKey && event.shiftKey && event.code === "KeyZ") {
     if (html.style.display === "block") {
       html.style.display = "none";
