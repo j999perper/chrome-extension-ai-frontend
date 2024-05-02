@@ -2,6 +2,10 @@
 const logoUrl = "https://i.ibb.co/jVSts5R/main.png";
 const expandIconUrl = "https://i.ibb.co/1dJ9tBB/expand.png";
 
+const arrowDownIconUrl =
+  "https://i.ibb.co/Z2gvx9s/keyboard-double-arrow-down.png";
+const arrowUpIconUrl = "https://i.ibb.co/bBkfWMQ/keyboard-double-arrow-up.png";
+
 // Create a new <div> element
 const html = document.createElement("div");
 
@@ -64,14 +68,19 @@ body.appendChild(shortInfoContainer);
 
 const selectToggleContainer = document.createElement("div");
 selectToggleContainer.className = "select-toggle-container";
+const selectToggleLabel = document.createElement("label");
+selectToggleLabel.textContent = "Prompt Settings";
+selectToggleLabel.style.cursor = "pointer";
 const selectToggleButton = document.createElement("img");
 selectToggleButton.className = "select-toggle";
-selectToggleButton.src = expandIconUrl;
+selectToggleButton.src = arrowDownIconUrl;
 selectToggleContainer.appendChild(selectToggleButton);
+selectToggleContainer.appendChild(selectToggleLabel);
 body.appendChild(selectToggleContainer);
 
 const selectsWrapper = document.createElement("div");
 selectsWrapper.className = "selects-wrapper";
+selectsWrapper.style.display = "none";
 
 const modelSelectContainer = document.createElement("div");
 modelSelectContainer.className = "row-container";
@@ -285,6 +294,20 @@ body.appendChild(buttonsContainer);
 
 const settingsContainter = document.createElement("div");
 settingsContainter.id = "settings";
+
+const serverUrlContainer = document.createElement("div");
+serverUrlContainer.className = "item";
+const serverUrlLabel = document.createElement("label");
+serverUrlLabel.className = "item-label";
+serverUrlLabel.textContent = "Server URL:";
+const serverUrlInput = document.createElement("input");
+serverUrlInput.type = "text";
+serverUrlInput.id = "serverUrl";
+serverUrlInput.value = "https://ruling-similarly-dove.ngrok-free.app";
+serverUrlContainer.appendChild(serverUrlLabel);
+serverUrlContainer.appendChild(serverUrlInput);
+settingsContainter.appendChild(serverUrlContainer);
+
 const firstNameContainer = document.createElement("div");
 firstNameContainer.className = "item";
 const firstNameLabel = document.createElement("label");
@@ -343,6 +366,7 @@ const cancelButton = document.createElement("button");
 cancelButton.textContent = "Cancel";
 confirmButtonsContainer.appendChild(saveButton);
 confirmButtonsContainer.appendChild(cancelButton);
+
 settingsContainter.appendChild(confirmButtonsContainer);
 
 html.appendChild(body);
@@ -360,15 +384,26 @@ settingsContainter.style.display = "none";
 document.body.appendChild(toggleButton);
 document.body.appendChild(html);
 
+function saveUserSettings(settings) {
+  chrome.storage.local.set({ userSettings: settings }, function () {
+    if (chrome.runtime.lastError) {
+      alert("Error saving to storage:", chrome.runtime.lastError);
+    } else {
+    }
+  });
+}
+
 toggleButton.addEventListener("click", () => {
   html.style.display = "block";
 });
 
-selectToggleButton.addEventListener("click", () => {
+selectToggleContainer.addEventListener("click", () => {
   if (selectsWrapper.style.display === "flex") {
     selectsWrapper.style.display = "none";
+    selectToggleButton.src = arrowDownIconUrl;
   } else {
     selectsWrapper.style.display = "flex";
+    selectToggleButton.src = arrowUpIconUrl;
   }
 });
 
@@ -397,22 +432,45 @@ cancelButton.addEventListener("click", () => {
   settingsContainter.style.display = "none";
 });
 
-// Autopopulate from localStorage
-function autoPopulate() {
-  const firstName = localStorage.getItem("firstName");
-  const lastName = localStorage.getItem("lastName");
-  const portfolio = localStorage.getItem("portfolio");
-  const github = localStorage.getItem("github");
+const defaultSettings = {
+  model: "gpt-3.5-turbo",
+  tone: "professional",
+  languageStyle: "formal",
+  formatting: "standard",
+  portfolioChecked: false,
+  githubChecked: false,
+  lastNameChecked: false,
+  copyToClipboardChecked: false,
+  serverUrl: "https://ruling-similarly-dove.ngrok-free.app",
+  firstName: "",
+  lastName: "",
+  portfolio: "",
+  github: "",
+};
 
-  const model = localStorage.getItem("model");
+async function getSettings() {
+  const userSettings = (await chrome.storage.local.get("userSettings"))
+    ?.userSettings;
+  return userSettings;
+}
 
-  const tone = localStorage.getItem("tone");
-  const languageStyle = localStorage.getItem("languageStyle");
-  const formatting = localStorage.getItem("formatting");
-  const portfolioChecked = localStorage.getItem("portfolioChecked");
-  const githubChecked = localStorage.getItem("githubChecked");
-  const lastNameChecked = localStorage.getItem("lastNameChecked");
-  const copyToClipboardChecked = localStorage.getItem("copyToClipboardChecked");
+async function autoPopulate() {
+  const userSettings = await getSettings();
+  const {
+    model,
+    tone,
+    languageStyle,
+    formatting,
+    portfolioChecked,
+    githubChecked,
+    lastNameChecked,
+    copyToClipboardChecked,
+    serverUrl,
+    firstName,
+    lastName,
+    portfolio,
+    github,
+  } = userSettings;
 
   if (model) modelSelect.value = model;
 
@@ -424,10 +482,12 @@ function autoPopulate() {
 
   if (languageStyle) languageStyleSelect.value = languageStyle;
   if (formatting) formattingSelect.value = formatting;
-  if (portfolioChecked === "true") portfolioCheck.checked = true;
-  if (githubChecked === "true") githubCheck.checked = true;
-  if (lastNameChecked === "true") lastNameCheck.checked = true;
-  if (copyToClipboardChecked === "true") copyToClipboardCheck.checked = true;
+  if (portfolioChecked) portfolioCheck.checked = true;
+  if (githubChecked) githubCheck.checked = true;
+  if (lastNameChecked) lastNameCheck.checked = true;
+  if (copyToClipboardChecked) copyToClipboardCheck.checked = true;
+
+  if (serverUrl) serverUrlInput.value = serverUrl;
 }
 
 const savePromptSettings = () => {
@@ -439,59 +499,68 @@ const savePromptSettings = () => {
   const githubChecked = githubCheck.checked;
   const lastNameChecked = lastNameCheck.checked;
   const copyToClipboardChecked = copyToClipboardCheck.checked;
+  const serverUrl = serverUrlInput.value;
 
-  localStorage.setItem("model", model);
-  localStorage.setItem("tone", tone);
-  localStorage.setItem("languageStyle", languageStyle);
-  localStorage.setItem("formatting", formatting);
-  localStorage.setItem("portfolioChecked", portfolioChecked);
-  localStorage.setItem("githubChecked", githubChecked);
-  localStorage.setItem("lastNameChecked", lastNameChecked);
-  localStorage.setItem("copyToClipboardChecked", copyToClipboardChecked);
+  const userSettings = getSettings();
+
+  saveUserSettings({
+    ...userSettings,
+    model,
+    tone,
+    languageStyle,
+    formatting,
+    portfolioChecked,
+    githubChecked,
+    lastNameChecked,
+    copyToClipboardChecked,
+    serverUrl,
+  });
 };
 
-const saveDetails = () => {
+const saveDetails = async () => {
   const firstName = firstNameInput.value;
   const lastName = lastNameInput.value;
   const portfolio = portfolioInput.value;
   const github = githubInput.value;
+  const serverUrl = serverUrlInput.value;
 
-  const storedFirstName = localStorage.getItem("firstName");
-  const storedLastName = localStorage.getItem("lastName");
-  const storedPortfolio = localStorage.getItem("portfolio");
-  const storedGithub = localStorage.getItem("github");
+  const userSettings = await getSettings();
+
+  const {
+    firstName: storedFirstName,
+    lastName: storedLastName,
+    portfolio: storedPortfolio,
+    github: storedGithub,
+    serverUrl: storedServerUrl,
+  } = userSettings;
 
   if (
     firstName === storedFirstName &&
     lastName === storedLastName &&
     portfolio === storedPortfolio &&
-    github === storedGithub
+    github === storedGithub &&
+    serverUrl === storedServerUrl
   ) {
     alert("No changes made!");
     return;
   }
 
-  localStorage.setItem("firstName", firstName);
-  localStorage.setItem("lastName", lastName);
-  localStorage.setItem("portfolio", portfolio);
-  localStorage.setItem("github", github);
+  saveUserSettings({
+    ...userSettings,
+    firstName,
+    lastName,
+    portfolio,
+    github,
+    serverUrl,
+  });
 
-  alert("Successfully saved settings!");
+  alert("Details saved successfully!");
 };
-
-function getSettings() {
-  const firstName = localStorage.getItem("firstName");
-  const lastName = localStorage.getItem("lastName");
-  const portfolio = localStorage.getItem("portfolio");
-  const github = localStorage.getItem("github");
-
-  return { firstName, lastName, portfolio, github };
-}
 
 function getGeneratePdf() {
   const content = document.getElementById("coverLetter").value;
 
-  fetch("https://ruling-similarly-dove.ngrok-free.app/gpt/download", {
+  fetch(`${serverUrlInput.value}/gpt/download`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -580,7 +649,7 @@ function removeTagsAndScriptStyleContent(content) {
   return cleanedContent;
 }
 
-function submitHandle(e) {
+async function submitHandle(e) {
   e.preventDefault();
 
   loadingSpan.style.display = "block";
@@ -595,7 +664,7 @@ function submitHandle(e) {
   const urlStatic = urlSpan.textContent;
 
   // Get settings
-  const { firstName, lastName, portfolio, github } = getSettings();
+  const { firstName, lastName, portfolio, github } = await getSettings();
   const settingsText = `First Name: ${firstName} Last Name: ${lastName}`;
 
   // Get prompt settings
@@ -641,8 +710,7 @@ function submitHandle(e) {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      Authorization:
-        "Bearer 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",
+      Authorization: "Bearer",
     },
     body: JSON.stringify({
       model,
