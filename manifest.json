@@ -33,8 +33,12 @@
     "tabs",
     "webNavigation"
   ],
+  "background": {
+    "service_worker": "background.js"
+  },
   "host_permissions": ["*://*/*"],
   "action": {
+    "default_icon": "logo.png",
     "default_title": "Generate Cover Letter"
   },
   "content_scripts": [
