@@ -778,3 +778,14 @@ document.addEventListener("keydown", function (event) {
     html.style.display = "none";
   }
 });
+
+chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
+  if (request.message === "toggle") {
+    if (html.style.display === "block") {
+      html.style.display = "none";
+    } else {
+      html.style.display = "block";
+    }
+  }
+  return true;
+});

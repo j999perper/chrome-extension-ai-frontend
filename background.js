@@ -1,8 +1,8 @@
-chrome.action.onClicked.addListener((tab) => {
-  chrome.notifications.create({
-    type: "basic",
-    iconUrl: "logo.png",
-    title: "CoverCraft AI",
-    message: "Click on the green icon at the top right to open the extension.",
-  });
+function sendMessageToContentScript(tabId) {
+  chrome.tabs.sendMessage(tabId, { message: "toggle" });
+}
+
+chrome.action.onClicked.addListener(async (tab) => {
+  if (!tab) return;
+  sendMessageToContentScript(tab.id);
 });
