@@ -446,6 +446,7 @@ const defaultSettings = {
   lastName: "",
   portfolio: "",
   github: "",
+  shortInfo: shortInfoTextArea.textContent,
 };
 
 async function getSettings() {
@@ -470,6 +471,7 @@ async function autoPopulate() {
     lastName,
     portfolio,
     github,
+    shortInfo,
   } = userSettings;
 
   if (model) modelSelect.value = model;
@@ -488,6 +490,7 @@ async function autoPopulate() {
   if (copyToClipboardChecked) copyToClipboardCheck.checked = true;
 
   if (serverUrl) serverUrlInput.value = serverUrl;
+  if (shortInfo) shortInfoTextArea.textContent = shortInfo;
 }
 
 const savePromptSettings = () => {
@@ -500,6 +503,7 @@ const savePromptSettings = () => {
   const lastNameChecked = lastNameCheck.checked;
   const copyToClipboardChecked = copyToClipboardCheck.checked;
   const serverUrl = serverUrlInput.value;
+  const shortInfo = shortInfoTextArea.value;
 
   const userSettings = getSettings();
 
@@ -514,6 +518,7 @@ const savePromptSettings = () => {
     lastNameChecked,
     copyToClipboardChecked,
     serverUrl,
+    shortInfo,
   });
 };
 
@@ -593,6 +598,7 @@ function getPromptSettings() {
   const githubChecked = githubCheck.checked;
   const lastNameChecked = lastNameCheck.checked;
   const copyToClipboardChecked = copyToClipboardCheck.checked;
+  const shortInfo = shortInfoTextArea.value;
 
   return {
     model,
@@ -603,6 +609,7 @@ function getPromptSettings() {
     githubChecked,
     lastNameChecked,
     copyToClipboardChecked,
+    shortInfo,
   };
 }
 
@@ -614,6 +621,7 @@ portfolioCheck.addEventListener("change", savePromptSettings);
 githubCheck.addEventListener("change", savePromptSettings);
 lastNameCheck.addEventListener("change", savePromptSettings);
 copyToClipboardCheck.addEventListener("change", savePromptSettings);
+shortInfoTextArea.addEventListener("change", savePromptSettings);
 
 const prePrompt = `You're an experienced resume writer who has been writing cover letters for almost all job profiles for over 20 years now. However, your speciality is writing personalised cover letters where you portray the best of the candidate on how well they write, their experience, skills, etc. Your task is to write a cover letter for applying to software engineer jobs. Here are the details -`;
 const afterPrompt = `Ensure the cover letter highlights the candidate's technical skills, experience in software development, ability to work in a team, problem-solving skills, and enthusiasm for the specific job and company they are applying to. Make the cover letter candidate-centered, showcasing their achievements and how they can bring value to the potential employer.
@@ -677,6 +685,7 @@ async function submitHandle(e) {
     githubChecked,
     lastNameChecked,
     copyToClipboardChecked,
+    shortInfo,
   } = getPromptSettings();
 
   const promptSettingsText =
@@ -699,6 +708,7 @@ async function submitHandle(e) {
   const prompt = `
     ${prePrompt}
     ${settingsText}
+    ${shortInfo}
     ${promptSettingsText}
       Here's the dom content of the job description page. ${urlStatic}
       ${content}
